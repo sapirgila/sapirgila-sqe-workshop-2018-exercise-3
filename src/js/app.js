@@ -3,7 +3,7 @@ import {parseCode,Starter} from './code-analyzer';
 
 function html_t_s(array){
     let html = '<table border = 1>';
-    html += '<tr> <td> Line </td>  <td> Type </td> <td> Name </td> <td> Condition </td> <td> Value </td> </tr>';
+    html += '<tr> <td> Line </td>  <td> Type  </td> <td> Name </td> <td> Condition </td> <td> Value </td> </tr>';
     for (var i=0;i<array.length;i++) {
         html += '<tr>';
         for (var k in array[i]) {
