@@ -14,7 +14,7 @@ function FunctionDEC_PARSER(program_tree,array){
 }
 function For_PARSER(program_tree,array)
 {
-    let s= escodegen.generate(program_tree['init'])+';'+escodegen.generate(program_tree['test'])+';'+escodegen.generate(program_tree['update']);
+    let s= escodegen.generate(program_tree['init'])+escodegen.generate(program_tree['test'])+';'+escodegen.generate(program_tree['update']);
     array.push({line:program_tree['loc']['start']['line'], type:'For Statement',name:'',condition:s,value:''});
     Starter(program_tree['body'],array);
 
@@ -65,15 +65,18 @@ function Return_PARSER(program_tree,array)
 {
     array.push({line:program_tree['loc']['start']['line'], type:'return statement',name:'',condition:'',value:escodegen.generate(program_tree['argument'])});
 }
-const TYPE_MAP_FUNC = {FunctionDeclaration: FunctionDEC_PARSER, Identifier:Identifier_PARSER, VariableDeclaration:VarDEC_PARSER,
+function Update_EXP(program_tree,array)
+{array.push({line:program_tree['loc']['start']['line'], type:'Update Expression',name:'',condition:'',value:escodegen.generate(program_tree['argument'])});
+}
+const TYPE_MAP_FUNC = {FunctionDeclaration: FunctionDEC_PARSER, Identifier:Identifier_PARSER, VariableDeclaration:VarDEC_PARSER,UpdateExpression:Update_EXP,
     VariableDeclarator:VariableDeclarator, ExpressionStatement: ExpState, AssignmentExpression: AssExp,WhileStatement: WhileExp_PARSER,IfStatement: IfStatement_PARSER, ReturnStatement: Return_PARSER, BlockStatement: BlockSt_PARSER,ForStatement :For_PARSER};
 
 function Starter(program_tree,array,value){
+
     let type = program_tree['type'];
     if(type === 'Program') Starter(program_tree['body'][0],array);
     else if(type === 'IfStatement') IfStatement_PARSER(program_tree,array,value);
     else TYPE_MAP_FUNC[type](program_tree,array);
-
 }
 
 export {parseCode, Starter};

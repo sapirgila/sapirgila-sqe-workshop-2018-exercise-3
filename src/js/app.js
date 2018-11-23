@@ -23,6 +23,8 @@ $(document).ready(function () {
         let parsedCode = parseCode(codeToParse);
         Starter(parsedCode,array);
         //   $('#parsedCode').val(JSON.stringify(array, null, 2));
+
         document.write(html_t_s(array));
     });
 });
+
