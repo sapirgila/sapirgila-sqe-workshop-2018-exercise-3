@@ -65,8 +65,11 @@ function Return_PARSER(program_tree,array)
 {
     array.push({line:program_tree['loc']['start']['line'], type:'return statement',name:'',condition:'',value:escodegen.generate(program_tree['argument'])});
 }
-function Update_EXP(program_tree,array)
-{array.push({line:program_tree['loc']['start']['line'], type:'Update Expression',name:'',condition:'',value:escodegen.generate(program_tree['argument'])});
+function Update_EXP(program_tree,array) {
+    let operator = program_tree['operator'];
+    let s = escodegen.generate(program_tree['argument']);
+    let final_value = s + operator;
+    array.push({line:program_tree['loc']['start']['line'], type:'Update Expression',name:'',condition:'',value:final_value});
 }
 const TYPE_MAP_FUNC = {FunctionDeclaration: FunctionDEC_PARSER, Identifier:Identifier_PARSER, VariableDeclaration:VarDEC_PARSER,UpdateExpression:Update_EXP,
     VariableDeclarator:VariableDeclarator, ExpressionStatement: ExpState, AssignmentExpression: AssExp,WhileStatement: WhileExp_PARSER,IfStatement: IfStatement_PARSER, ReturnStatement: Return_PARSER, BlockStatement: BlockSt_PARSER,ForStatement :For_PARSER};

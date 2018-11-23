@@ -35,8 +35,8 @@ describe('TEST',() => {
         let parse = parseCode(code);
         let check = [];
         Starter(parse,check);
-        assert.equal(JSON.stringify(check),'[{"line":1,"type":"For Statement","name":"","condition":"var i = 0;i < 5;i++","value":""},{"line":1,' +
-            '"type":"Update Expression","name":"","condition":"","value":"i"}]');
+        assert.equal(JSON.stringify(check),'[{"line":1,"type":"For Statement","name":"","condition":"var i = 0;i < 5;i++","value":""},{"line":1,"type":"Update Expr' +
+            'ession","name":"","condition":"","value":"i++"}]');
     });
 });
 describe('TEST',() => {
@@ -54,7 +54,7 @@ describe('TEST',() => {
     });
 });
 describe('TEST',() => {
-    it('TEST3', () => {
+    it('TEST4', () => {
 
         let code = '{function a(){if(x<y){ return y;} else {return x;}}}';
         let parse = parseCode(code);
@@ -64,7 +64,7 @@ describe('TEST',() => {
     });
 });
 describe('TEST',() => {
-    it('TEST3', () => {
+    it('TEST5', () => {
 
         let code = 'for(var i=0;i<5;i++){if(x>i) x=i; else {x=x;}}';
         let parse = parseCode(code);
@@ -76,7 +76,7 @@ describe('TEST',() => {
     });
 });
 describe('TEST',() => {
-    it('TEST3', () => {
+    it('TEST6', () => {
 
         let code = 'if(x>y) x=y; else if(y>x) y=x;';
         let parse = parseCode(code);
@@ -88,13 +88,70 @@ describe('TEST',() => {
     });
 });
 describe('TEST',() => {
-    it('TEST3', () => {
+    it('TEST7', () => {
 
         let code = 'while(x>y) x++;';
         let parse = parseCode(code);
         let check = [];
         Starter(parse,check);
         assert.equal(JSON.stringify(check),'[{"line":1,"type":"while statement","name":"","condition":"x > y","value":""},{"line":1,"type":"Update Expression","n' +
-            'ame":"","condition":"","value":"x"}]');
+            'ame":"","condition":"","value":"x++"}]');
+    });
+});
+describe('TEST',() => {
+    it('TEST8', () => {
+
+        let code = 'for(var j=0;j<i;j++) {x--; y++;}';
+        let parse = parseCode(code);
+        let check = [];
+        Starter(parse,check);
+        assert.equal(JSON.stringify(check),'[{"line":1,"type":"For Statement","name":"","condition":"var j = 0;j < i;j++","value":""},{"line":1,"type":"Update Exp' +
+            'ression","name":"","condition":"","value":"x--"},{"line":1,"type":"Update Expression","name":"","condition":"","value":"y++"}]');
+    });
+});
+describe('TEST',() => {
+    it('TEST9', () => {
+
+        let code = 'if(x+1>i) {x=x+1;}';
+        let parse = parseCode(code);
+        let check = [];
+        Starter(parse,check);
+        assert.equal(JSON.stringify(check),'[{"line":1,"type":"if statement","name":"","condition":"x + 1 > i","value":""},{"line":1,"type":"Assignment Expression' +
+            '","name":"x","condition":"","Value":"x + 1"}]');
+    });
+});
+describe('TEST',() => {
+    it('TEST10', () => {
+
+        let code = 'while(x>y){for(var i=0;i<5;i++){x=x+1}}';
+        let parse = parseCode(code);
+        let check = [];
+        Starter(parse,check);
+        assert.equal(JSON.stringify(check),'[{"line":1,"type":"while statement","name":"","condition":"x > y","value":""},{"line":1,"type":"For Statement","name' +
+            '":"","condition":"var i = 0;i < 5;i++","value":""},{"line":1,"type":"Assignment Expression","name":"x","condition":"","Value":"x + 1"' +
+            '}]');
+    });
+});
+describe('TEST',() => {
+    it('TEST11', () => {
+
+        let code = '{i++; if(i>7){i=x;}else{x=i;}}';
+        let parse = parseCode(code);
+        let check = [];
+        Starter(parse,check);
+        assert.equal(JSON.stringify(check),'[{"line":1,"type":"Update Expression","name":"","condition":"","value":"i++"},{"line":1,"type":"if statement","name"' +
+            ':"","condition":"i > 7","value":""},{"line":1,"type":"Assignment Expression","name":"i","condition":"","Value":"x"},{"line":1,"typ' +
+            'e":"Assignment Expression","name":"x","condition":"","Value":"i"}]');
+    });
+});
+describe('TEST',() => {
+    it('TEST12', () => {
+
+        let code = '{let a=5; let b=3}';
+        let parse = parseCode(code);
+        let check = [];
+        Starter(parse,check);
+        assert.equal(JSON.stringify(check),'[{"line":1,"type":"Variable Declaration","name":"a","condition":"","Value":"5"},{"line":1,"type":"Variable Declaration' +
+            '","name":"b","condition":"","Value":"3"}]');
     });
 });
