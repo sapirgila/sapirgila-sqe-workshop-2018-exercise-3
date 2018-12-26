@@ -1,30 +1,22 @@
 import $ from 'jquery';
-import {parseCode,Starter} from './code-analyzer';
-
-function html_t_s(array){
-    let html = '<table border = 1>';
-    html += '<tr> <td> Line </td>  <td> Type  </td> <td> Name </td> <td> Condition </td> <td> Value </td> </tr>';
-    for (var i=0;i<array.length;i++) {
-        html += '<tr>';
-        for (var k in array[i]) {
-            if(array[i].hasOwnProperty(k)) html += '<td>' + array[i][k] + '</td>';
-        }
-        html += '</tr>';
-    }
-    html+='</table>';
-
-    return html;
-}
-
+import {parseCode,Starter,GenerateHtmlCode} from './code-analyzer';
+import * as escodegen from 'escodegen';
 $(document).ready(function () {
     $('#codeSubmissionButton').click(() => {
-        let array = [];
+        // let array = [];
         let codeToParse = $('#codePlaceholder').val();
+        let input2 = $('#Input').val();
+        // Input = $('#Input').val();
         let parsedCode = parseCode(codeToParse);
-        Starter(parsedCode,array);
-        //   $('#parsedCode').val(JSON.stringify(array, null, 2));
-
-        document.write(html_t_s(array));
+        //Substitue(parsedCode);
+        // Starter(parsedCode,array);
+        // console.log(parseCode(codeToParse));
+        let x = Starter(parsedCode);
+        let y = GenerateHtmlCode(x,input2);
+        // console.log(x);
+        $('#Input').val(escodegen.generate(x));
+        document.write(y);
+        //$('#Input').val(escodegen.generate(parsedCode));
     });
 });
 
