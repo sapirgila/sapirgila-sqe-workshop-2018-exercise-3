@@ -21,13 +21,12 @@ function FunctionDEC_PARSER(program_tree){
     let body = program_tree['body'];
     Splice_body(body);
 }
-function For_PARSER(program_tree)
-{
-    Starter(program_tree['body']);
-}
-function LITERAL_PARSER(program_tree){ if(program_tree=='nothing') return 0; else return 0;}
+// function LITERAL_PARSER(program_tree){ if(program_tree=='nothing') return 0; else return 0;}
 
-function Identifier_PARSER(program_tree){ if(program_tree=='nothing') return 0; else return 0 ;}
+function Identifier_PARSER(){  return 0; }
+//if(program_tree!='nothing')
+//==
+// else return 0 ;
 
 let dont_remove = false;
 
@@ -68,13 +67,13 @@ function VarDEC_PARSER(program_tree) {
         declarations_extract[j].init = find_identifier_and_replace(declarations_extract[j].init);
         if (hasIdentifiers)
             declarations_extract[j].init = esprima.
-            parseScript(eval(escodegen.generate(declarations_extract[j].init))+';').body[0].expression;
+                parseScript(eval(escodegen.generate(declarations_extract[j].init))+';').body[0].expression;
         current_env.set(declarations_extract[j].id.name, declarations_extract[j].init);
     }
     return -1;
 }
 
-function VariableDeclarator() {}
+// function VariableDeclarator() {}
 function ExpState(program_tree) {
     let exp=program_tree ['expression'];
     //  console.log(exp);
@@ -83,9 +82,10 @@ function ExpState(program_tree) {
 function AssExp(program_tree) {
     hasIdentifiers = true;
     program_tree.right = find_identifier_and_replace(program_tree.right);
-    if (hasIdentifiers)
-        program_tree.right = esprima.parseScript(eval(escodegen.generate(program_tree.right)) + ';').body[0].expression;
-
+    if (hasIdentifiers) {
+        let right_gen_string = escodegen.generate(program_tree.right);
+        if(!isNaN(right_gen_string)) program_tree.right = esprima.parseScript(eval(right_gen_string) + ';').body[0].expression;
+    }
     //console.log(program_tree.right);
     current_env.set(program_tree.left.name, program_tree.right);
     return -1;
@@ -115,32 +115,36 @@ function WhileExp_PARSER(program_tree) {
     left_vars = []; while_mod = true;
     for(var i=0;i<body.length;i++)
     {
-        if(body[i].type=='ExpressionStatement')
-            left_vars.push(body[i].expression.left.name);
+        // if(body[i].type=='ExpressionStatement')
+        left_vars.push(body[i].expression.left.name);
     }
     Starter( program_tree.body); while_mod = false;
     current_env = clones.pop();
     return 0;
 }
-function BinaryExpression(program_tree){
-    Starter(program_tree.right);
-    Starter(program_tree.left);
-    return 0;
-}
+// function BinaryExpression(program_tree){
+//     Starter(program_tree.right);
+//     Starter(program_tree.left);
+//     return 0;
+// }
 
 function Return_PARSER(program_tree){
     program_tree.argument = find_identifier_and_replace(program_tree.argument);
 }
-function Update_EXP(program_tree) {
-    //let operator = program_tree['operator'];
-    //let s = escodegen.generate(program_tree['argument']);
-    //let final_value = s + operator;
-    if(program_tree=='nothing') return 0; else return 0 ;
-    //   array.push({line:program_tree['loc']['start']['line'], type:'Update Expression',name:'',condition:'',value:final_value});
-}
-const TYPE_MAP_FUNC = {FunctionDeclaration: FunctionDEC_PARSER, VariableDeclaration:VarDEC_PARSER,Identifier:Identifier_PARSER,AssignmentExpression: AssExp,Literal:LITERAL_PARSER,BinaryExpression: BinaryExpression,
+// function Update_EXP(program_tree) {
+//     //let operator = program_tree['operator'];
+//     //let s = escodegen.generate(program_tree['argument']);
+//     //let final_value = s + operator;
+//     if(program_tree=='nothing') return 0; else return 0 ;
+//     //   array.push({line:program_tree['loc']['start']['line'], type:'Update Expression',name:'',condition:'',value:final_value});
+// }
+// const TYPE_MAP_FUNC = {FunctionDeclaration: FunctionDEC_PARSER, VariableDeclaration:VarDEC_PARSER,Identifier:Identifier_PARSER,AssignmentExpression: AssExp,Literal:LITERAL_PARSER,BinaryExpression: BinaryExpression,
+//     ExpressionStatement: ExpState,WhileStatement: WhileExp_PARSER,IfStatement: IfStatement_PARSER,
+//     BlockStatement: Splice_body,VariableDeclarator:VariableDeclarator, ReturnStatement: Return_PARSER, UpdateExpression:Update_EXP};
+
+const TYPE_MAP_FUNC = {FunctionDeclaration: FunctionDEC_PARSER, VariableDeclaration:VarDEC_PARSER,Identifier:Identifier_PARSER,AssignmentExpression: AssExp,
     ExpressionStatement: ExpState,WhileStatement: WhileExp_PARSER,IfStatement: IfStatement_PARSER,
-    BlockStatement: Splice_body,VariableDeclarator:VariableDeclarator, ReturnStatement: Return_PARSER,ForStatement :For_PARSER, UpdateExpression:Update_EXP};
+    BlockStatement: Splice_body, ReturnStatement: Return_PARSER};
 
 function Starter(program_tree){
 
@@ -192,13 +196,12 @@ function KingOfTheTraversals(string,expression,table){
 
 function extract_function(subtitutedFunction){
     let body = subtitutedFunction['body'];
-    for(let y = 0; y<body.length ; y++) if(body[y]['type'] === 'FunctionDeclaration') return body[y];
-
-    return null;
-
-
+    for(let y = 0; y<body.length ; y++)  return body[y];
 
 }
+
+//if(body[y]['type'] === 'FunctionDeclaration')
+//return null
 
 
 
@@ -232,8 +235,8 @@ function Substiution(string,table){
 
     for(let j = 0; j<commaspliter.length; j++){
         let value = valuextracter(commaspliter[j],table);
-        if(value !== null && value.length>1) stringsubber = stringsubber + '(' + value + ')' + ' ';
-        else if(value!== null) stringsubber = stringsubber + value + ' ';
+        //if(value !== null && value.length>1) stringsubber = stringsubber + '(' + value + ')' + ' ';
+        if(value!== null) stringsubber = stringsubber + value + ' '; //else
         else stringsubber = stringsubber + commaspliter[j] + ' ';
     }
     return stringsubber.slice(0,stringsubber.length-1);

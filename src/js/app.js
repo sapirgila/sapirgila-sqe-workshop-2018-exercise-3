@@ -19,4 +19,3 @@ $(document).ready(function () {
         //$('#Input').val(escodegen.generate(parsedCode));
     });
 });
-
